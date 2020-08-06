@@ -27,8 +27,9 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 import importlib, inspect
-#from .lib.eea_geomorphology.eea_geomorphology import eea_geomorphology
-from .plugins.plugin import Plugin
+from .data_sources.source import Source
+from qgis.core import *
+from qgis.gui import *
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -45,27 +46,32 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.plugins = []
-        self.load_plugins()
-        self.print_plugins_metadata()
+        self.sources = []
+        self.load_sources()
+        self.print_sources_metadata()
+        self.add_layer_from_source()
 
-    def load_plugins(self):
+    def load_sources(self):
         # Used from https://stackoverflow.com/questions/3178285/list-classes-in-directory-python
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
-        plugins_dir = os.path.join(current_dir, 'plugins')
-        paths = [ name for name in os.listdir(plugins_dir) if os.path.isdir(os.path.join(plugins_dir, name)) ]
+        sources_dir = os.path.join(current_dir, 'data_sources')
+        paths = [ name for name in os.listdir(sources_dir) if os.path.isdir(os.path.join(sources_dir, name)) ]
         for path in paths:
             if not path.startswith("__"):
-                print(path)
-                module = importlib.import_module(".plugins." + path + ".source", package=current_module_name)
+                module = importlib.import_module(".data_sources." + path + ".source", package=current_module_name)
                 for member in dir(module):
-                    print(member)
-                    if member != 'Plugin':
+                    if member != 'Source':
                         handler_class = getattr(module, member)
-                        if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Plugin):
-                            self.plugins.append(handler_class())
+                        if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
+                            self.sources.append(handler_class())
 
-    def print_plugins_metadata(self):
-        for plugin in self.plugins:
-            print("META: " + plugin.get_metadata().name + " " + plugin.get_metadata().description)
+    def print_sources_metadata(self):
+        for source in self.sources:
+            print("META: " + source.get_metadata().name + " " + source.get_metadata().description)
+            print("META: " + source.get_layers()[0].name + " " + source.get_layers()[0].description)
+
+    def add_layer_from_source(self):
+        vector = self.sources[0].get_vector(0)
+        QgsProject.instance().addMapLayer(vector)
+
