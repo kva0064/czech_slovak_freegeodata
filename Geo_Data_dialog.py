@@ -73,5 +73,6 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def add_layer_from_source(self):
         vector = self.sources[0].get_vector(0)
-        QgsProject.instance().addMapLayer(vector)
+        if vector is not None:
+            QgsProject.instance().addMapLayer(vector)
 

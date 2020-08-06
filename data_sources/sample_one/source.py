@@ -23,3 +23,6 @@ class SampleOne(Source):
             return None
         else:
             return vector
+
+    def get_raster(self, layerid):
+        return None
