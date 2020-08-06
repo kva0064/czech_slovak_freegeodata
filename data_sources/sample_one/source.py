@@ -13,7 +13,7 @@ class SampleOne(Source):
         layer2 = LayerMetadata(u"Cukrová řepa", u"Množství v okresech", "vector")
         return [layer1, layer2]
 
-    def get_vector(self, layerid):
+    def get_vector(self, layerid, extent, EPSG):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'nu3.shp')
         # TODO read data from HTTP source join with geodata, etc.
         # TODO return styles as well
@@ -24,5 +24,5 @@ class SampleOne(Source):
         else:
             return vector
 
-    def get_raster(self, layerid):
+    def get_raster(self, layerid, extent, EPSG):
         return None
