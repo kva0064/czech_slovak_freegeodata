@@ -37,7 +37,7 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, iface, parent=None):
         """Constructor."""
         super(GeoDataDialog, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
@@ -45,14 +45,16 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
+        self.iface = iface
         self.setupUi(self)
         self.sources = []
-        self.load_sources()
-        self.print_sources_metadata()
-        self.add_layer_from_source()
+        self.pushButtonLoadSources.clicked.connect(self.load_sources)
+        self.pushButtonLoadData1.clicked.connect(self.add_layer_from_source_1)
+        self.pushButtonLoadData2.clicked.connect(self.add_layer_from_source_2)
 
     def load_sources(self):
         # Used from https://stackoverflow.com/questions/3178285/list-classes-in-directory-python
+        self.sources = []
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
         sources_dir = os.path.join(current_dir, 'data_sources')
@@ -66,16 +68,26 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                         if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
                             self.sources.append(handler_class())
 
+        self.print_sources_metadata()
+
     def print_sources_metadata(self):
         for source in self.sources:
             print("META: " + source.get_metadata().name + " " + source.get_metadata().description)
             print("META: " + source.get_layers()[0].name + " " + source.get_layers()[0].description)
 
-    def add_layer_from_source(self):
-        vector = self.sources[0].get_vector(0, None, None)
+    def add_layer_from_source_1(self):
+        vector = self.sources[0].get_vector(0, self.get_extent(), self.get_epsg())
         if vector is not None:
             QgsProject.instance().addMapLayer(vector)
 
-        vector = self.sources[1].get_vector(0, None, None)
+    def add_layer_from_source_2(self):
+        vector = self.sources[1].get_vector(0, self.get_extent(), self.get_epsg())
         if vector is not None:
             QgsProject.instance().addMapLayer(vector)
+
+    def get_extent(self):
+        return self.iface.mapCanvas().extent()
+
+    def get_epsg(self):
+        srs = self.iface.mapCanvas().mapSettings().destinationCrs()
+        return srs.authid()

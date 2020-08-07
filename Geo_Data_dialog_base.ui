@@ -32,14 +32,53 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>90</y>
+     <x>50</x>
+     <y>250</y>
      <width>67</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
     <string>Fungujem!</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonLoadSources">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Sources</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonLoadData1">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>60</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Data 1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonLoadData2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>100</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Data 2</string>
    </property>
   </widget>
  </widget>

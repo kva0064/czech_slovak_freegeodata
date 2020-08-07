@@ -17,7 +17,7 @@ class SampleOne(Source):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'nu3.shp')
         # TODO read data from HTTP source join with geodata, etc.
         # TODO return styles as well
-        vector = QgsVectorLayer(path, "Cukrová řepa", "ogr")
+        vector = QgsVectorLayer(path, "Cukrová řepa A", "ogr")
         if not vector.isValid():
             QgsMessageLog.logMessage("Vrstvu " + path + " se nepodařilo načíst", "GeoData")
             return None
