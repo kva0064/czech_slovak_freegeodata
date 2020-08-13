@@ -27,15 +27,10 @@ import configparser
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-
-current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-sources_dir = os.path.join(current_dir, 'data_sources')
-
-paths = []
-
-for name in os.listdir(sources_dir):
-    if os.path.isdir(os.path.join(sources_dir, name)):
-        paths.append(name)
+from qgis.PyQt import QtGui
+from qgis.PyQt.QtCore import QSettings
+from qgis.utils import iface
+from qgis.core import *
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -51,12 +46,71 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.pushbutton_print.clicked.connect(self.data_sources)
-    def data_sources(self):
+        self.pushbutton_print.clicked.connect(self.load_data_sources)
+        self.pushbutton_test.clicked.connect(self.load_wms)
+        
+    def load_data_sources(self):
+        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        sources_dir = os.path.join(current_dir, 'data_sources')
+        
+        paths = []
+        
+        for name in os.listdir(sources_dir):
+            if os.path.isdir(os.path.join(sources_dir, name)):
+                paths.append(name)
+        
+        #predlzena verzia kodu vyssie
+        #paths = [ name for name in os.listdir(sources_dir) if os.path.isdir(os.path.join(sources_dir, name)) ]
+        
         config = configparser.ConfigParser()
+        
         for path in paths:
             config.read(os.path.join(sources_dir, path, 'metadata.ini'))
-            print(config.sections())
-        for key in config['gdal']:  
-            print(key)
+            # print(config.sections())
+            # for key in config['gdal']:
+            #     print(key)
             print(config['gdal']['source_file'])
+            self.add_item_to_list(config['gdal']['source_file'])
+            
+    def add_item_to_list(self, label):
+        itemN = QtWidgets.QListWidgetItem()
+        widget = QtWidgets.QWidget()
+        widgetText =  QtWidgets.QLabel(label)
+        widgetButton = QtWidgets.QPushButton("Add Layer")
+        widgetLayout = QtWidgets.QHBoxLayout()
+        widgetLayout.addWidget(widgetText)
+        widgetLayout.addWidget(widgetButton)
+        widgetLayout.addStretch()
+        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        widget.setLayout(widgetLayout)
+        itemN.setSizeHint(widget.sizeHint())
+        widget.show()
+        #Add widget to QListWidget funList
+        self.listWidget.addItem(itemN)
+        self.listWidget.setItemWidget(itemN, widget)
+            
+    def load_wms(self):
+        print("I am working")
+        urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
+        rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
+        QgsProject.instance().addMapLayer(rlayer)
+        
+# Sources
+sources = []
+sources.append(["connections-xyz","Google Maps","","","","https://mt1.google.com/vt/lyrs=m&x=%7Bx%7D&y=%7By%7D&z=%7Bz%7D","","19","0"])
+sources.append(["connections-xyz","Stamen Terrain", "", "", "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL", "http://tile.stamen.com/terrain/%7Bz%7D/%7Bx%7D/%7By%7D.png", "", "20", "0"])
+ 
+# Add sources to browser
+for source in sources:
+   connectionType = source[0]
+   connectionName = source[1]
+   QSettings().setValue("qgis/%s/%s/authcfg" % (connectionType, connectionName), source[2])
+   QSettings().setValue("qgis/%s/%s/password" % (connectionType, connectionName), source[3])
+   QSettings().setValue("qgis/%s/%s/referer" % (connectionType, connectionName), source[4])
+   QSettings().setValue("qgis/%s/%s/url" % (connectionType, connectionName), source[5])
+   QSettings().setValue("qgis/%s/%s/username" % (connectionType, connectionName), source[6])
+   QSettings().setValue("qgis/%s/%s/zmax" % (connectionType, connectionName), source[7])
+   QSettings().setValue("qgis/%s/%s/zmin" % (connectionType, connectionName), source[8])
+
+# Update GUI
+iface.reloadConnections()
