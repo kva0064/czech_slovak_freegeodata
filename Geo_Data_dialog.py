@@ -24,13 +24,15 @@
 
 import os
 import configparser
+import sys
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 from qgis.PyQt import QtGui
-from qgis.PyQt.QtCore import QSettings
 from qgis.utils import iface
 from qgis.core import *
+from qgis.PyQt.QtGui import *
+from qgis.PyQt.QtCore import *
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -48,7 +50,8 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setupUi(self)
         self.pushbutton_print.clicked.connect(self.load_data_sources)
         self.pushbutton_test.clicked.connect(self.load_wms)
-        
+        self.wms_sources = []
+
     def load_data_sources(self):
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         sources_dir = os.path.join(current_dir, 'data_sources')
@@ -63,20 +66,25 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         #paths = [ name for name in os.listdir(sources_dir) if os.path.isdir(os.path.join(sources_dir, name)) ]
         
         config = configparser.ConfigParser()
-        
+
+        index = 0
         for path in paths:
             config.read(os.path.join(sources_dir, path, 'metadata.ini'))
             # print(config.sections())
             # for key in config['gdal']:
             #     print(key)
             print(config['gdal']['source_file'])
-            self.add_item_to_list(config['gdal']['source_file'])
-            
-    def add_item_to_list(self, label):
+            self.add_item_to_list(config['gdal']['source_file'], index)
+            index += 1
+            self.wms_sources.append(config['gdal']['url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'])
+ 
+
+    def add_item_to_list(self, label, index):
         itemN = QtWidgets.QListWidgetItem()
         widget = QtWidgets.QWidget()
         widgetText =  QtWidgets.QLabel(label)
         widgetButton = QtWidgets.QPushButton("Add Layer")
+        widgetButton.clicked.connect(lambda:self.add_layer(index))
         widgetLayout = QtWidgets.QHBoxLayout()
         widgetLayout.addWidget(widgetText)
         widgetLayout.addWidget(widgetButton)
@@ -88,13 +96,21 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         #Add widget to QListWidget funList
         self.listWidget.addItem(itemN)
         self.listWidget.setItemWidget(itemN, widget)
-            
+
+    def add_layer(self, index):
+        print("Add Layer " + (self.wms_sources[index]))
+        rlayer = QgsRasterLayer(self.wms_sources[index], 'MA-ALUS', 'wms')
     def load_wms(self):
-        print("I am working")
         urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
         rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
         QgsProject.instance().addMapLayer(rlayer)
-        
+
+     # add MapTiler Collection to Browser
+    def initGui(self):
+        self.dip = DataItemProvider()
+        QgsApplication.instance().dataItemProviderRegistry().addProvider(self.dip)
+
+        self._activate_copyrights        
 # Sources
 sources = []
 sources.append(["connections-xyz","Google Maps","","","","https://mt1.google.com/vt/lyrs=m&x=%7Bx%7D&y=%7By%7D&z=%7Bz%7D","","19","0"])
