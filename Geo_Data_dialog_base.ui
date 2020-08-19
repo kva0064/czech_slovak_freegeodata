@@ -61,7 +61,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tabServices">
     <attribute name="title">
@@ -70,8 +70,8 @@
     <widget class="QListWidget" name="listWidget">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
+       <x>20</x>
+       <y>20</y>
        <width>361</width>
        <height>311</height>
       </rect>
@@ -100,6 +100,29 @@
     <attribute name="title">
      <string>Other sources</string>
     </attribute>
+    <widget class="QListWidget" name="listWidgetOtherDataSources">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>361</width>
+       <height>311</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonLoadOtherDataSources">
+     <property name="geometry">
+      <rect>
+       <x>448</x>
+       <y>40</y>
+       <width>221</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load Other Sources</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tabTesting">
     <attribute name="title">

@@ -34,24 +34,25 @@ from qgis.core import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
 
+import importlib, inspect
+from .other_data_sources.source import Source
+
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'Geo_Data_dialog_base.ui'))
 
 
 class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, iface, parent=None):
         """Constructor."""
         super(GeoDataDialog, self).__init__(parent)
-        # Set up the user interface from Designer through FORM_CLASS.
-        # After self.setupUi() you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
+        self.iface = iface
         self.setupUi(self)
         self.pushbutton_print.clicked.connect(self.load_data_sources)
         self.pushbutton_test.clicked.connect(self.load_wms)
+        self.pushButtonLoadOtherDataSources.clicked.connect(self.load_other_data_sources)
         self.data_sources = []
+        self.other_data_sources = []
 
     def load_data_sources(self):
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
@@ -141,3 +142,54 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # Update GUI
         iface.reloadConnections()
+
+    def load_other_data_sources(self):
+        # Used from https://stackoverflow.com/questions/3178285/list-classes-in-directory-python
+        self.other_data_sources = []
+        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
+        sources_dir = os.path.join(current_dir, 'other_data_sources')
+        paths = [ name for name in os.listdir(sources_dir) if os.path.isdir(os.path.join(sources_dir, name)) ]
+        index = 0
+        for path in paths:
+            if not path.startswith("__"):
+                module = importlib.import_module(".other_data_sources." + path + ".source", package=current_module_name)
+                for member in dir(module):
+                    if member != 'Source':
+                        handler_class = getattr(module, member)
+                        if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
+                            current_source = handler_class()
+                            self.other_data_sources.append(current_source)
+                            # TODO list all layers not just a sources
+                            self.add_other_data_source_item_to_list(current_source.get_metadata().name, index)
+                            index += 1
+
+    def add_other_data_source_item_to_list(self, label, index):
+        itemN = QtWidgets.QListWidgetItem()
+        widget = QtWidgets.QWidget()
+        widgetText = QtWidgets.QLabel(label)
+        widgetButton = QtWidgets.QPushButton("Add Layer")
+        widgetButton.clicked.connect(lambda: self.add_other_data_source_layer(index))
+        widgetLayout = QtWidgets.QHBoxLayout()
+        widgetLayout.addWidget(widgetText)
+        widgetLayout.addWidget(widgetButton)
+        widgetLayout.addStretch()
+        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        widget.setLayout(widgetLayout)
+        itemN.setSizeHint(widget.sizeHint())
+        widget.show()
+        # Add widget to QListWidget funList
+        self.listWidgetOtherDataSources.addItem(itemN)
+        self.listWidgetOtherDataSources.setItemWidget(itemN, widget)
+
+    def add_other_data_source_layer(self, index):
+        vector = self.other_data_sources[index].get_vector(0, self.get_extent(), self.get_epsg())
+        if vector is not None:
+            QgsProject.instance().addMapLayer(vector)
+
+    def get_extent(self):
+        return self.iface.mapCanvas().extent()
+
+    def get_epsg(self):
+        srs = self.iface.mapCanvas().mapSettings().destinationCrs()
+        return srs.authid()
