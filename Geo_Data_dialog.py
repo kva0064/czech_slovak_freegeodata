@@ -112,14 +112,9 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         QgsProject.instance().addMapLayer(layer)
 
     def load_wms(self):
-        # urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
-        # rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
-        # QgsProject.instance().addMapLayer(rlayer)
-        for x in iface.mainWindow().findChildren(QToolBar):
-            print(x.objectName())
-            if 'Plugin' in x.objectName():
-                for y in x.findChildren(QAction):
-                    print(y.objectName())
+        urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
+        rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
+        QgsProject.instance().addMapLayer(rlayer)
 
     # add MapTiler Collection to Browser
     def initGui(self):
