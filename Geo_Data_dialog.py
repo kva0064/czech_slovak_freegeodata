@@ -33,6 +33,7 @@ from qgis.utils import iface
 from qgis.core import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtWidgets import *
 
 import importlib, inspect
 from .other_data_sources.source import Source
@@ -51,6 +52,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushbutton_print.clicked.connect(self.load_data_sources)
         self.pushbutton_test.clicked.connect(self.load_wms)
         self.pushButtonLoadOtherDataSources.clicked.connect(self.load_other_data_sources)
+        self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
         self.data_sources = []
         self.other_data_sources = []
 
@@ -110,9 +112,14 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         QgsProject.instance().addMapLayer(layer)
 
     def load_wms(self):
-        urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
-        rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
-        QgsProject.instance().addMapLayer(rlayer)
+        # urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
+        # rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
+        # QgsProject.instance().addMapLayer(rlayer)
+        for x in iface.mainWindow().findChildren(QToolBar):
+            print(x.objectName())
+            if 'Plugin' in x.objectName():
+                for y in x.findChildren(QAction):
+                    print(y.objectName())
 
     # add MapTiler Collection to Browser
     def initGui(self):
@@ -193,3 +200,13 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
     def get_epsg(self):
         srs = self.iface.mapCanvas().mapSettings().destinationCrs()
         return srs.authid()
+
+    def load_ruian_plugin(self):
+        ruian_found = False
+        for x in iface.mainWindow().findChildren(QAction):
+            if "RUIAN" in x.toolTip():
+                ruian_found = True
+                x.trigger()
+
+        if not ruian_found:
+            self.labelRuianError.setText("This functionality requires RUIAN plugin")

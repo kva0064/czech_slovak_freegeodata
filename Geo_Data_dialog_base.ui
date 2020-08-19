@@ -61,7 +61,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabServices">
     <attribute name="title">
@@ -95,6 +95,32 @@
     <attribute name="title">
      <string>RUIAN</string>
     </attribute>
+    <widget class="QPushButton" name="pushButtonLoadRuianPlugin">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>171</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Import data from RUIAN</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelRuianError">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>691</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tabOther">
     <attribute name="title">
