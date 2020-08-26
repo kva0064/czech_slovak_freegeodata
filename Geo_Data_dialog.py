@@ -56,6 +56,14 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.data_sources = []
         self.other_data_sources = []
 
+    def get_url(self, config):
+        if config['general']['type'] == 'WMS':
+            # TODO check CRS? Maybe.
+            return 'url=' + config['wms']['url'] + "&layers=" + config['wms']['layers'] + "&styles=" + config['wms']['styles'] + "&" + config['wms']['params']
+
+        if config['general']['type'] == 'TMS':
+            return "type=xyz&url=" + config['tms']['url']
+
     def load_data_sources(self):
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         sources_dir = os.path.join(current_dir, 'data_sources')
@@ -77,10 +85,12 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             # print(config['gdal']['source_file'])
             self.add_item_to_list(config['ui']['alias'], index)
             # TODO check type of sources then add adequate prefix or parameters
+            url = self.get_url(config)
+            print(url)
             self.data_sources.append(
                 {
                     "alias": config['ui']['alias'],
-                    "url": "type=xyz&url=" + config['tms']['url']
+                    "url": url
                 }
             )
             index += 1
@@ -112,8 +122,9 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         QgsProject.instance().addMapLayer(layer)
 
     def load_wms(self):
-        urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
-        rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
+        # urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
+        urlWithParams = 'url=http://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx&styles=&layers=GR_ORTFOTORGB&format=image/png&crs=EPSG:5514'
+        rlayer = QgsRasterLayer(urlWithParams, 'CUZK', 'wms')
         QgsProject.instance().addMapLayer(rlayer)
 
     # add MapTiler Collection to Browser
