@@ -108,13 +108,13 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         for path in paths:
             config.read(os.path.join(sources_dir, path, 'metadata.ini'))
             parent = QTreeWidgetItem(tree)
-            parent.setText(0, "Parent {}".format(path))
+            parent.setText(0, "{}".format(path))
             parent.setFlags(parent.flags()
                   | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
             for x in range(4):
                 child = QTreeWidgetItem(parent)
                 child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
-                child.setText(0, "Child {}".format(x))
+                child.setText(0, "{}".format(x))
                 child.setCheckState(0, Qt.Unchecked)
     
     def add_QTreeWidget_to_list(self, label, index):
