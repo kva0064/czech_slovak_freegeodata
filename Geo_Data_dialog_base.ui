@@ -61,7 +61,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tabServices">
     <attribute name="title">
@@ -165,6 +165,34 @@
      </property>
      <property name="text">
       <string>Add WMS</string>
+     </property>
+    </widget>
+    <widget class="QTreeWidget" name="treeWidgetSources">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>80</y>
+       <width>511</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="QPushButton" name="pushButtonLoadTree">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>30</y>
+       <width>161</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load Sources into Tree</string>
      </property>
     </widget>
    </widget>
