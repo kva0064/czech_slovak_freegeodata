@@ -55,6 +55,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
         self.data_sources = []
         self.other_data_sources = []
+        self.QTreeWidget
 
     def load_data_sources(self):
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
@@ -85,6 +86,53 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             )
             index += 1
             # self.wms_sources.append(config['gdal']['url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'])
+            
+#tree widget and checkbox buttons
+    tree    = QTreeWidget ()
+    headerItem  = QTreeWidgetItem()
+    item    = QTreeWidgetItem()
+    paths = []
+
+    current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    sources_dir = os.path.join(current_dir, 'data_sources')
+
+    for name in os.listdir(sources_dir):
+        if os.path.isdir(os.path.join(sources_dir, name)):
+            paths.append(name)
+
+    config = configparser.ConfigParser()
+
+    index = 0
+    for path in paths:
+        config.read(os.path.join(sources_dir, path, 'metadata.ini'))
+        parent = QTreeWidgetItem(tree)
+        parent.setText(0, "Parent {}".format(path))
+        parent.setFlags(parent.flags()
+              | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
+    for x in range(4):
+        child = QTreeWidgetItem(parent)
+        child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+        child.setText(0, "Child {}".format(x))
+        child.setCheckState(0, Qt.Unchecked)
+    tree.show()
+    
+    def add_QTreeWidget_to_list(self, label, index):
+        itemN = QtWidgets.QListWidgetItem()
+        widget = QtWidgets.QWidget()
+        widgetText = QtWidgets.QLabel(label)
+        widgetButton = QtWidgets.QPushButton("Add Layer")
+        widgetButton.clicked.connect(lambda: add_QTreeWidget_to_list(index))
+        widgetLayout = QtWidgets.QHBoxLayout()
+        widgetLayout.addWidget(widgetText)
+        widgetLayout.addWidget(widgetButton)
+        widgetLayout.addStretch()
+        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        widget.setLayout(widgetLayout)
+        itemN.setSizeHint(widget.sizeHint())
+        widget.show()
+        # Add widget to QListWidget funList
+        self.listWidgetOtherDataSources.addItem(itemN)
+        self.listWidgetOtherDataSources.setItemWidget(itemN, widget)
 
     def add_item_to_list(self, label, index):
         itemN = QtWidgets.QListWidgetItem()
@@ -111,17 +159,10 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         # TODO check if the layer is valid
         QgsProject.instance().addMapLayer(layer)
 
-    def load_wms(self):
-        urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
-        rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
-        QgsProject.instance().addMapLayer(rlayer)
-
-    # add MapTiler Collection to Browser
-    def initGui(self):
-        self.dip = DataItemProvider()
-        QgsApplication.instance().dataItemProviderRegistry().addProvider(self.dip)
-
-        self._activate_copyrights
+    #def load_wms(self):
+        #urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
+        #rlayer = QgsRasterLayer(urlWithParams, 'MA-ALUS', 'wms')
+        #QgsProject.instance().addMapLayer(rlayer)
 
     def addToBrowser(self):
         # Sources
