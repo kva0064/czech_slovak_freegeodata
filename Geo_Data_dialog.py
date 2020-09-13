@@ -70,6 +70,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             if data_source['checked'] == "True":
                 if "WMS" in data_source['type'] or "TMS" in data_source['type']:
                     self.add_layer(data_source)
+                    self.addSourceToBrowser(data_source)
                 if "PROC" in data_source['type']:
                     if data_source['proc_class'] is not None:
                         self.add_proc_data_source_layer(data_source)
@@ -166,6 +167,27 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                     return current_source
         return None
 
+    def addSourceToBrowser(self, data_source):
+        source = None
+        if data_source['type'] == "TMS":
+            url = data_source['url'][13:]
+            source = ["connections-xyz", data_source['alias'], "", "", "", url, "", "19", "0"]
+        if data_source['type'] == "WMS":
+            url = data_source['url'][4:].split("&")[0]
+            source = ["connections-wms", data_source['alias'], "", "", "", url, "", "19", "0"]
+        if source != None:
+            connectionType = source[0]
+            connectionName = source[1]
+            QSettings().setValue("qgis/%s/%s/authcfg" % (connectionType, connectionName), source[2])
+            QSettings().setValue("qgis/%s/%s/password" % (connectionType, connectionName), source[3])
+            QSettings().setValue("qgis/%s/%s/referer" % (connectionType, connectionName), source[4])
+            QSettings().setValue("qgis/%s/%s/url" % (connectionType, connectionName), source[5])
+            QSettings().setValue("qgis/%s/%s/username" % (connectionType, connectionName), source[6])
+            QSettings().setValue("qgis/%s/%s/zmax" % (connectionType, connectionName), source[7])
+            QSettings().setValue("qgis/%s/%s/zmin" % (connectionType, connectionName), source[8])
+
+        iface.reloadConnections()
+
     def addToBrowser(self):
         # Sources
         sources = []
@@ -187,7 +209,6 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # Update GUI
         iface.reloadConnections()
-
 
     def add_proc_data_source_layer(self, data_source):
         vector = data_source['proc_class'].get_vector(0, self.get_extent(), self.get_epsg())
