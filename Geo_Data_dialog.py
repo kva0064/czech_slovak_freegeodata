@@ -65,6 +65,13 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def load_data(self):
         print("LOAD DATA")
+        for data_source in self.data_sources:
+            print(data_source)
+            if data_source['checked'] == "True":
+                if "WMS" in data_source['type'] or "TMS" in data_source['type']:
+                    self.add_layer(data_source)
+                if "PROC" in data_source['type']:
+                    print("NOT YET IMPLEMENTED")
 
     def load_sources_into_tree(self):
 
@@ -82,6 +89,8 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         paths.sort()
         config = configparser.ConfigParser()
         group = ""
+
+        index = 0
 
         for path in paths:
             config.read(os.path.join(sources_dir, path, 'metadata.ini'))
@@ -101,23 +110,31 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 {
                     "type": config['general']['type'],
                     "alias": config['ui']['alias'],
-                    "url": url
+                    "url": url,
+                    "checked": config['ui']['checked']
                 }
             )
             child = QTreeWidgetItem(parent)
             child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
             child.setText(0, config['ui']['alias'])
+            child.setData(0, Qt.UserRole, index)
             if config['ui']['checked'] == "True":
                 child.setCheckState(0, Qt.Checked)
             else:
                 child.setCheckState(0, Qt.Unchecked)
+            index += 1
 
     def handleChanged(self, item, column):
         # Get his status when the check status changes.
-        if item.checkState(column) == Qt.Checked:
-            print("checked", item, item.text(column))
-        if item.checkState(column) == Qt.Unchecked:
-            print("unchecked", item, item.text(column))
+        if item.data(0, Qt.UserRole) is not None:
+            id = int(item.data(0, Qt.UserRole))
+            if item.checkState(column) == Qt.Checked:
+                print("checked", item, item.text(column))
+                self.data_sources[id]['checked'] = "True"
+            if item.checkState(column) == Qt.Unchecked:
+                print("unchecked", item, item.text(column))
+                self.data_sources[id]['checked'] = "False"
+            print(item.data(0, Qt.UserRole))
 
     def add_QTreeWidget_to_list(self, label, index):
         itemN = QtWidgets.QListWidgetItem()
@@ -155,10 +172,10 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.listWidget.addItem(itemN)
         self.listWidget.setItemWidget(itemN, widget)
 
-    def add_layer(self, index):
+    def add_layer(self, data_source):
         # print("Add Layer " + (self.wms_sources[index]))
         # rlayer = QgsRasterLayer(self.wms_sources[index], 'MA-ALUS', 'wms')
-        layer = QgsRasterLayer(self.data_sources[index]['url'], self.data_sources[index]['alias'], 'wms')
+        layer = QgsRasterLayer(data_source['url'], data_source['alias'], 'wms')
         # TODO check if the layer is valid
         QgsProject.instance().addMapLayer(layer)
 
