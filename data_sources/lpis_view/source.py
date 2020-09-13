@@ -12,13 +12,6 @@ import math
 
 class Lpis(Source):
 
-    def get_metadata(self):
-        return SourceMetadata("LPIS", "Geometrie a kultura")
-
-    def get_layers(self):
-        layer1 = LayerMetadata("LPIS", u"Geometrie a kultura", "vector")
-        return [layer1]
-
     def get_vector(self, layerid, extent, EPSG):
         katuzid = self.get_katuzid(extent, EPSG)
         path = self.download_from_lpis(katuzid)
@@ -27,6 +20,7 @@ class Lpis(Source):
             return None
         else:
             vector = self.create_vector(path, katuzid)
+            vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
             if not vector.isValid():
                 QgsMessageLog.logMessage("Layer " + path + " was not loaded", "GeoData")
                 return None
