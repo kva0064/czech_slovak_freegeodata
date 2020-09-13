@@ -1,7 +1,7 @@
 from .. metadata import *
 from .. source import Source
 import os
-from qgis.core import *
+from qgis.core import QgsVectorLayer, QgsMessageLog
 
 class SampleOne(Source):
 

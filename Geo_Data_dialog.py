@@ -71,7 +71,8 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 if "WMS" in data_source['type'] or "TMS" in data_source['type']:
                     self.add_layer(data_source)
                 if "PROC" in data_source['type']:
-                    print("NOT YET IMPLEMENTED")
+                    if data_source['proc_class'] is not None:
+                        self.add_proc_data_source_layer(data_source)
 
     def load_sources_into_tree(self):
 
@@ -106,12 +107,17 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             if "WMS" in config['general']['type'] or "TMS" in config['general']['type']:
                 url = self.get_url(config)
 
+            proc_class = None
+            if "PROC" in config['general']['type']:
+                proc_class = self.get_proc_class(path)
+
             self.data_sources.append(
                 {
                     "type": config['general']['type'],
                     "alias": config['ui']['alias'],
                     "url": url,
-                    "checked": config['ui']['checked']
+                    "checked": config['ui']['checked'],
+                    "proc_class": proc_class
                 }
             )
             child = QTreeWidgetItem(parent)
@@ -178,6 +184,26 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         layer = QgsRasterLayer(data_source['url'], data_source['alias'], 'wms')
         # TODO check if the layer is valid
         QgsProject.instance().addMapLayer(layer)
+
+    def get_proc_class(self, path):
+        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
+        module = importlib.import_module(".data_sources." + path + ".source", package=current_module_name)
+        print(path)
+        for member in dir(module):
+            # print("GPC")
+            print(member)
+            if member != 'Source':
+                handler_class = getattr(module, member)
+                if member == 'SampleOne':
+                    print("GPC")
+                    print(handler_class)
+                    print(inspect.isclass(handler_class))
+                    print(issubclass(handler_class, Source))
+                if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
+                    current_source = handler_class()
+                    return current_source
+        return None
 
     def load_wms(self):
         # urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
@@ -246,8 +272,8 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.listWidgetOtherDataSources.addItem(itemN)
         self.listWidgetOtherDataSources.setItemWidget(itemN, widget)
 
-    def add_other_data_source_layer(self, index):
-        vector = self.other_data_sources[index].get_vector(0, self.get_extent(), self.get_epsg())
+    def add_proc_data_source_layer(self, data_source):
+        vector = data_source['proc_class'].get_vector(0, self.get_extent(), self.get_epsg())
         if vector is not None:
             QgsProject.instance().addMapLayer(vector)
 
