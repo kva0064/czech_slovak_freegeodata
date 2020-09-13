@@ -36,7 +36,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 
 import importlib, inspect
-from .other_data_sources.source import Source
+from .data_sources.source import Source
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -49,13 +49,11 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         super(GeoDataDialog, self).__init__(parent)
         self.iface = iface
         self.setupUi(self)
-        self.pushbutton_print.clicked.connect(self.load_data_sources)
-        self.pushbutton_test.clicked.connect(self.load_wms)
-        self.pushButtonLoadOtherDataSources.clicked.connect(self.load_other_data_sources)
         self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
+        self.pushButtonLoadData.clicked.connect(self.load_data)
         self.data_sources = []
         self.other_data_sources = []
-        self.pushButtonLoadTree.clicked.connect(self.load_sources_into_tree)
+        self.load_sources_into_tree()
 
     def get_url(self, config):
         if config['general']['type'] == 'WMS':
@@ -65,68 +63,62 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         if config['general']['type'] == 'TMS':
             return "type=xyz&url=" + config['tms']['url']
 
-    def load_data_sources(self):
+    def load_data(self):
+        print("LOAD DATA")
+
+    def load_sources_into_tree(self):
+
+        self.treeWidgetSources.itemChanged.connect(self.handleChanged)
+        tree    = self.treeWidgetSources
+        paths = []
+
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         sources_dir = os.path.join(current_dir, 'data_sources')
 
-        paths = []
-
         for name in os.listdir(sources_dir):
-            if os.path.isdir(os.path.join(sources_dir, name)):
+            if os.path.isdir(os.path.join(sources_dir, name)) and name[:2] != "__":
                 paths.append(name)
 
+        paths.sort()
         config = configparser.ConfigParser()
+        group = ""
 
-        index = 0
         for path in paths:
             config.read(os.path.join(sources_dir, path, 'metadata.ini'))
-            # print(config.sections())
-            # for key in config['gdal']:
-            #     print(key)
-            # print(config['gdal']['source_file'])
-            self.add_item_to_list(config['ui']['alias'], index)
-            # TODO check type of sources then add adequate prefix or parameters
-            url = self.get_url(config)
-            print(url)
+            current_group = path.split("_")[0]
+            if current_group != group:
+                group = current_group
+                parent = QTreeWidgetItem(tree)
+                parent.setText(0, current_group) # TODO read from metadata.ini (maybe)
+                parent.setFlags(parent.flags()
+                  | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
+
+            url = ""
+            if "WMS" in config['general']['type'] or "TMS" in config['general']['type']:
+                url = self.get_url(config)
+
             self.data_sources.append(
                 {
+                    "type": config['general']['type'],
                     "alias": config['ui']['alias'],
                     "url": url
                 }
             )
-            index += 1
-            # self.wms_sources.append(config['gdal']['url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'])
-
-    def load_sources_into_tree(self):
-
-        #tree widget and checkbox buttons
-        tree    = self.treeWidgetSources
-        headerItem  = QTreeWidgetItem()
-        item    = QTreeWidgetItem()
-        paths = []
-
-        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        sources_dir = os.path.join(current_dir, 'data_sources')
-
-        for name in os.listdir(sources_dir):
-            if os.path.isdir(os.path.join(sources_dir, name)):
-                paths.append(name)
-
-        config = configparser.ConfigParser()
-
-        index = 0
-        for path in paths:
-            config.read(os.path.join(sources_dir, path, 'metadata.ini'))
-            parent = QTreeWidgetItem(tree)
-            parent.setText(0, "{}".format(path))
-            parent.setFlags(parent.flags()
-                  | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
-            for x in range(4):
-                child = QTreeWidgetItem(parent)
-                child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
-                child.setText(0, "{}".format(x))
+            child = QTreeWidgetItem(parent)
+            child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+            child.setText(0, config['ui']['alias'])
+            if config['ui']['checked'] == "True":
+                child.setCheckState(0, Qt.Checked)
+            else:
                 child.setCheckState(0, Qt.Unchecked)
-    
+
+    def handleChanged(self, item, column):
+        # Get his status when the check status changes.
+        if item.checkState(column) == Qt.Checked:
+            print("checked", item, item.text(column))
+        if item.checkState(column) == Qt.Unchecked:
+            print("unchecked", item, item.text(column))
+
     def add_QTreeWidget_to_list(self, label, index):
         itemN = QtWidgets.QListWidgetItem()
         widget = QtWidgets.QWidget()
