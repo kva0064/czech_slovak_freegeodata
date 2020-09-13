@@ -188,28 +188,6 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
         iface.reloadConnections()
 
-    def addToBrowser(self):
-        # Sources
-        sources = []
-        sources.append(["connections-xyz", "Google Maps", "", "", "", "https://mt1.google.com/vt/lyrs=m&x=%7Bx%7D&y=%7By%7D&z=%7Bz%7D", "", "19", "0"])
-        sources.append(["connections-xyz", "Stamen Terrain", "", "", "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL",
-                        "http://tile.stamen.com/terrain/%7Bz%7D/%7Bx%7D/%7By%7D.png", "", "20", "0"])
-
-        # Add sources to browser
-        for source in sources:
-            connectionType = source[0]
-            connectionName = source[1]
-            QSettings().setValue("qgis/%s/%s/authcfg" % (connectionType, connectionName), source[2])
-            QSettings().setValue("qgis/%s/%s/password" % (connectionType, connectionName), source[3])
-            QSettings().setValue("qgis/%s/%s/referer" % (connectionType, connectionName), source[4])
-            QSettings().setValue("qgis/%s/%s/url" % (connectionType, connectionName), source[5])
-            QSettings().setValue("qgis/%s/%s/username" % (connectionType, connectionName), source[6])
-            QSettings().setValue("qgis/%s/%s/zmax" % (connectionType, connectionName), source[7])
-            QSettings().setValue("qgis/%s/%s/zmin" % (connectionType, connectionName), source[8])
-
-        # Update GUI
-        iface.reloadConnections()
-
     def add_proc_data_source_layer(self, data_source):
         vector = data_source['proc_class'].get_vector(0, self.get_extent(), self.get_epsg())
         if vector is not None:
