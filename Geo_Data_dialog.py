@@ -64,9 +64,9 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             return "type=xyz&url=" + config['tms']['url']
 
     def load_data(self):
-        print("LOAD DATA")
+        # print("LOAD DATA")
         for data_source in self.data_sources:
-            print(data_source)
+            # print(data_source)
             if data_source['checked'] == "True":
                 if "WMS" in data_source['type'] or "TMS" in data_source['type']:
                     self.add_layer(data_source)
@@ -135,48 +135,12 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         if item.data(0, Qt.UserRole) is not None:
             id = int(item.data(0, Qt.UserRole))
             if item.checkState(column) == Qt.Checked:
-                print("checked", item, item.text(column))
+                # print("checked", item, item.text(column))
                 self.data_sources[id]['checked'] = "True"
             if item.checkState(column) == Qt.Unchecked:
-                print("unchecked", item, item.text(column))
+                # print("unchecked", item, item.text(column))
                 self.data_sources[id]['checked'] = "False"
-            print(item.data(0, Qt.UserRole))
-
-    def add_QTreeWidget_to_list(self, label, index):
-        itemN = QtWidgets.QListWidgetItem()
-        widget = QtWidgets.QWidget()
-        widgetText = QtWidgets.QLabel(label)
-        widgetButton = QtWidgets.QPushButton("Add Layer")
-        widgetButton.clicked.connect(lambda: add_QTreeWidget_to_list(index))
-        widgetLayout = QtWidgets.QHBoxLayout()
-        widgetLayout.addWidget(widgetText)
-        widgetLayout.addWidget(widgetButton)
-        widgetLayout.addStretch()
-        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        widget.setLayout(widgetLayout)
-        itemN.setSizeHint(widget.sizeHint())
-        widget.show()
-        # Add widget to QListWidget funList
-        self.listWidgetOtherDataSources.addItem(itemN)
-        self.listWidgetOtherDataSources.setItemWidget(itemN, widget)
-
-    def add_item_to_list(self, label, index):
-        itemN = QtWidgets.QListWidgetItem()
-        widget = QtWidgets.QWidget()
-        widgetText = QtWidgets.QLabel(label)
-        widgetButton = QtWidgets.QPushButton("Add Layer")
-        widgetButton.clicked.connect(lambda: self.add_layer(index))
-        widgetLayout = QtWidgets.QHBoxLayout()
-        widgetLayout.addWidget(widgetText)
-        widgetLayout.addWidget(widgetButton)
-        widgetLayout.addStretch()
-        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        widget.setLayout(widgetLayout)
-        itemN.setSizeHint(widget.sizeHint())
-        widget.show()
-        # Add widget to QListWidget funList
-        self.listWidget.addItem(itemN)
-        self.listWidget.setItemWidget(itemN, widget)
+            # print(item.data(0, Qt.UserRole))
 
     def add_layer(self, data_source):
         # print("Add Layer " + (self.wms_sources[index]))
@@ -189,27 +153,18 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
         module = importlib.import_module(".data_sources." + path + ".source", package=current_module_name)
-        print(path)
         for member in dir(module):
-            # print("GPC")
-            print(member)
             if member != 'Source':
                 handler_class = getattr(module, member)
-                if member == 'SampleOne':
-                    print("GPC")
-                    print(handler_class)
-                    print(inspect.isclass(handler_class))
-                    print(issubclass(handler_class, Source))
+                # if member == 'SampleOne':
+                #     print("GPC")
+                #     print(handler_class)
+                #     print(inspect.isclass(handler_class))
+                #     print(issubclass(handler_class, Source))
                 if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
                     current_source = handler_class()
                     return current_source
         return None
-
-    def load_wms(self):
-        # urlWithParams = 'url=http://kaart.maaamet.ee/wms/alus&format=image/png&layers=MA-ALUS&styles=&crs=EPSG:3301'
-        urlWithParams = 'url=http://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx&styles=&layers=GR_ORTFOTORGB&format=image/png&crs=EPSG:5514'
-        rlayer = QgsRasterLayer(urlWithParams, 'CUZK', 'wms')
-        QgsProject.instance().addMapLayer(rlayer)
 
     def addToBrowser(self):
         # Sources
@@ -233,44 +188,6 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         # Update GUI
         iface.reloadConnections()
 
-    def load_other_data_sources(self):
-        # Used from https://stackoverflow.com/questions/3178285/list-classes-in-directory-python
-        self.other_data_sources = []
-        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        current_module_name = os.path.splitext(os.path.basename(current_dir))[0]
-        sources_dir = os.path.join(current_dir, 'other_data_sources')
-        paths = [ name for name in os.listdir(sources_dir) if os.path.isdir(os.path.join(sources_dir, name)) ]
-        index = 0
-        for path in paths:
-            if not path.startswith("__"):
-                module = importlib.import_module(".other_data_sources." + path + ".source", package=current_module_name)
-                for member in dir(module):
-                    if member != 'Source':
-                        handler_class = getattr(module, member)
-                        if handler_class and inspect.isclass(handler_class) and issubclass(handler_class, Source):
-                            current_source = handler_class()
-                            self.other_data_sources.append(current_source)
-                            # TODO list all layers not just a sources
-                            self.add_other_data_source_item_to_list(current_source.get_metadata().name, index)
-                            index += 1
-
-    def add_other_data_source_item_to_list(self, label, index):
-        itemN = QtWidgets.QListWidgetItem()
-        widget = QtWidgets.QWidget()
-        widgetText = QtWidgets.QLabel(label)
-        widgetButton = QtWidgets.QPushButton("Add Layer")
-        widgetButton.clicked.connect(lambda: self.add_other_data_source_layer(index))
-        widgetLayout = QtWidgets.QHBoxLayout()
-        widgetLayout.addWidget(widgetText)
-        widgetLayout.addWidget(widgetButton)
-        widgetLayout.addStretch()
-        widgetLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        widget.setLayout(widgetLayout)
-        itemN.setSizeHint(widget.sizeHint())
-        widget.show()
-        # Add widget to QListWidget funList
-        self.listWidgetOtherDataSources.addItem(itemN)
-        self.listWidgetOtherDataSources.setItemWidget(itemN, widget)
 
     def add_proc_data_source_layer(self, data_source):
         vector = data_source['proc_class'].get_vector(0, self.get_extent(), self.get_epsg())
