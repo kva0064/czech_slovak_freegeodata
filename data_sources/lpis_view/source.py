@@ -1,4 +1,3 @@
-from .. metadata import *
 from .. source import Source
 import os
 from qgis.core import *
@@ -12,7 +11,7 @@ import math
 
 class Lpis(Source):
 
-    def get_vector(self, layerid, extent, EPSG):
+    def get_vector(self, extent, EPSG):
         katuzid = self.get_katuzid(extent, EPSG)
         path = self.download_from_lpis(katuzid)
         if path is None:
@@ -27,7 +26,7 @@ class Lpis(Source):
             else:
                 return vector
 
-    def get_raster(self, layerid, extent, EPSG):
+    def get_raster(self, extent, EPSG):
         return None
 
     def get_xy_center(self, extent, EPSG):

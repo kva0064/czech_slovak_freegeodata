@@ -189,9 +189,12 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         iface.reloadConnections()
 
     def add_proc_data_source_layer(self, data_source):
-        vector = data_source['proc_class'].get_vector(0, self.get_extent(), self.get_epsg())
-        if vector is not None:
-            QgsProject.instance().addMapLayer(vector)
+        if data_source['type'] == "PROC_VEC":
+            layer = data_source['proc_class'].get_vector(self.get_extent(), self.get_epsg())
+        if data_source['type'] == "PROC_RAS":
+            layer = data_source['proc_class'].get_raster(self.get_extent(), self.get_epsg())
+        if layer is not None:
+            QgsProject.instance().addMapLayer(layer)
 
     def get_extent(self):
         return self.iface.mapCanvas().extent()
