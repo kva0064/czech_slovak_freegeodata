@@ -25,6 +25,7 @@
 import os
 import configparser
 import sys
+import webbrowser
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -49,6 +50,8 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         super(GeoDataDialog, self).__init__(parent)
         self.iface = iface
         self.setupUi(self)
+        self.pushButtonAbout.setIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/cropped-opengeolabs-logo-small.png")))
+        self.pushButtonAbout.clicked.connect(self.showAbout)
         self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
         self.pushButtonLoadData.clicked.connect(self.load_data)
         self.data_sources = []
@@ -125,6 +128,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
             child.setText(0, config['ui']['alias'])
             child.setIcon(0, QIcon(os.path.join(sources_dir, path, config['ui']['icon'])))
+            parent.setIcon(0, QIcon(os.path.join(sources_dir, path, config['ui']['icon'])))
             child.setData(0, Qt.UserRole, index)
             if config['ui']['checked'] == "True":
                 child.setCheckState(0, Qt.Checked)
@@ -213,3 +217,9 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
         if not ruian_found:
             self.labelRuianError.setText("This functionality requires RUIAN plugin")
+
+    def showAbout(self):
+        try:
+            webbrowser.get().open("http://opengeolabs.cz")
+        except (webbrowser.Error):
+            self.iface.messageBar().pushMessage(QApplication.translate("GeoData", "Error", None), QApplication.translate("GeoData", "Can not find web browser to open page about", None), level=Qgis.Critical)
