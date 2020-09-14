@@ -124,6 +124,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
             child = QTreeWidgetItem(parent)
             child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
             child.setText(0, config['ui']['alias'])
+            child.setIcon(0, QIcon(os.path.join(sources_dir, path, config['ui']['icon'])))
             child.setData(0, Qt.UserRole, index)
             if config['ui']['checked'] == "True":
                 child.setCheckState(0, Qt.Checked)
