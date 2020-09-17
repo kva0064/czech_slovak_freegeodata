@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>557</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -82,7 +82,7 @@ The plugin allows also to open RUIAN plugin dialog for import data from RUIAN se
    <property name="geometry">
     <rect>
      <x>580</x>
-     <y>400</y>
+     <y>460</y>
      <width>131</width>
      <height>71</height>
     </rect>
@@ -96,6 +96,22 @@ The plugin allows also to open RUIAN plugin dialog for import data from RUIAN se
      <width>80</width>
      <height>80</height>
     </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelRuianError">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>360</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

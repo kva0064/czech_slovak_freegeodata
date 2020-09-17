@@ -216,7 +216,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 x.trigger()
 
         if not ruian_found:
-            self.labelRuianError.setText("This functionality requires RUIAN plugin")
+            self.labelRuianError.setText(QApplication.translate("GeoData","This functionality requires RUIAN plugin", None))
 
     def showAbout(self):
         try:

@@ -23,6 +23,11 @@
         <source>Can not find web browser to open page about</source>
         <translation>Nemohu najít prohlížeč k zobrazení stránky o aplikaci</translation>
     </message>
+    <message>
+        <location filename="../Geo_Data_dialog.py" line="221"/>
+        <source>This functionality requires RUIAN plugin</source>
+        <translation>Pro tuto funkci potřebujete RUIAN plugin</translation>
+    </message>
 </context>
 <context>
     <name>GeoDataDialogBase</name>
