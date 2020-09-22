@@ -61,7 +61,15 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
     def get_url(self, config):
         if config['general']['type'] == 'WMS':
             # TODO check CRS? Maybe.
-            return 'url=' + config['wms']['url'] + "&layers=" + config['wms']['layers'] + "&styles=" + config['wms']['styles'] + "&" + config['wms']['params']
+            url = 'url=' + config['wms']['url']
+            layers = config['wms']['layers'].split(',')
+            for layer in layers:
+                url += "&layers=" + layer
+            styles = config['wms']['styles'].split(',')
+            for style in styles:
+                url += "&styles=" + style
+            url += "&" + config['wms']['params']
+            return url
 
         if config['general']['type'] == 'TMS':
             return "type=xyz&url=" + config['tms']['url']
@@ -151,6 +159,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
     def add_layer(self, data_source):
         # print("Add Layer " + (self.wms_sources[index]))
         # rlayer = QgsRasterLayer(self.wms_sources[index], 'MA-ALUS', 'wms')
+        print(data_source['url'])
         layer = QgsRasterLayer(data_source['url'], data_source['alias'], 'wms')
         # TODO check if the layer is valid
         QgsProject.instance().addMapLayer(layer)
