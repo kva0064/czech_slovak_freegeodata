@@ -8,6 +8,7 @@ import urllib3
 import tempfile
 import csv
 import math
+from .options_dialog import OptionsDialog
 
 class Lpis(Source):
 
@@ -118,3 +119,10 @@ class Lpis(Source):
             vl.updateExtents()
 
         return vl
+
+    def has_options_dialog(self):
+        return True
+
+    def show_options_dialog(self):
+        self.dlg = OptionsDialog()
+        self.dlg.show()

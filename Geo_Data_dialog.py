@@ -54,9 +54,12 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButtonAbout.clicked.connect(self.showAbout)
         self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
         self.pushButtonLoadData.clicked.connect(self.load_data)
+        self.pushButtonSourceOptions.clicked.connect(self.show_source_options_dialog)
         self.data_sources = []
-        self.other_data_sources = []
+        self.treeWidgetSources.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.treeWidgetSources.customContextMenuRequested.connect(self.open_context_menu)
         self.load_sources_into_tree()
+        self.selectedSource = -1
 
     def get_url(self, config):
         if config['general']['type'] == 'WMS':
@@ -89,6 +92,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
     def load_sources_into_tree(self):
 
         self.treeWidgetSources.itemChanged.connect(self.handleChanged)
+        self.treeWidgetSources.itemSelectionChanged.connect(self.handleSelected)
         tree    = self.treeWidgetSources
         paths = []
 
@@ -144,6 +148,19 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 child.setCheckState(0, Qt.Unchecked)
             index += 1
 
+    def handleSelected(self):
+        self.selectedSource = -1
+        self.pushButtonSourceOptions.setEnabled(False)
+        print(self.treeWidgetSources.selectedItems())
+        for item in self.treeWidgetSources.selectedItems():
+            if item.data(0, Qt.UserRole) is not None:
+                id = int(item.data(0, Qt.UserRole))
+                print(str(id))
+                if self.data_sources[id]['proc_class'].has_options_dialog():
+                    self.selectedSource = id
+                    self.pushButtonSourceOptions.setEnabled(True)
+                    print("HAS OPTIONS DIALOG")
+
     def handleChanged(self, item, column):
         # Get his status when the check status changes.
         if item.data(0, Qt.UserRole) is not None:
@@ -155,6 +172,15 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 # print("unchecked", item, item.text(column))
                 self.data_sources[id]['checked'] = "False"
             # print(item.data(0, Qt.UserRole))
+
+    def open_context_menu(self):
+        # TODO - if we want context menu
+        # https://wiki.python.org/moin/PyQt/Creating%20a%20context%20menu%20for%20a%20tree%20view
+        print("MENU")
+
+    def show_source_options_dialog(self):
+        if self.selectedSource >= 0:
+            self.data_sources[self.selectedSource]['proc_class'].show_options_dialog()
 
     def add_layer(self, data_source):
         # print("Add Layer " + (self.wms_sources[index]))
