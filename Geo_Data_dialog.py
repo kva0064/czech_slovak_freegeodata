@@ -32,6 +32,7 @@ from qgis.PyQt import QtWidgets
 from qgis.PyQt import QtGui
 from qgis.utils import iface
 from qgis.core import *
+from qgis.gui import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
