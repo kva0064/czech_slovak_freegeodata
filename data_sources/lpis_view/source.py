@@ -1,7 +1,5 @@
 from .. source import Source
 import os
-from qgis.core import *
-from qgis.PyQt.QtCore import QVariant
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 import urllib3
@@ -9,6 +7,12 @@ import tempfile
 import csv
 import math
 from .options_dialog import OptionsDialog
+from qgis.PyQt.QtWidgets import *
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+
+from qgis.core import *
+from qgis.gui import *
 
 class Lpis(Source):
 
@@ -87,9 +91,15 @@ class Lpis(Source):
                 fp.write(chunk)
         response.release_conn()
 
-        lpis_zip = ZipFile(zip_temp)
-        current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        lpis_zip.extractall(os.path.join(current_dir, 'data'))
+        try:
+            lpis_zip = ZipFile(zip_temp)
+            current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+            lpis_zip.extractall(os.path.join(current_dir, 'data'))
+        except:
+            QMessageBox.information(None, QApplication.translate("GeoData", "Error", None),
+                                    QApplication.translate("GeoData", "Can not read data from LPIS database.", None))
+            return
+
         zip_temp.close()
 
         current_file = None
