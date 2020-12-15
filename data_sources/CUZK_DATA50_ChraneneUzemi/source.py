@@ -14,7 +14,6 @@ class CUZKCHU(Source):
     def get_vector(self, extent, EPSG):
         self.download_data()
         path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'hraniceUzemnichJednotek.zip') + '/hraniceUzemnichJednotek/ChraneneUzemi.shp'
-        # TODO read data from HTTP source join with geodata, etc.
         vector = QgsVectorLayer(path, "Chráněné území", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
         if not vector.isValid():
