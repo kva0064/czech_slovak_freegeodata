@@ -4,9 +4,15 @@ from qgis.core import QgsVectorLayer, QgsMessageLog
 
 class CUZKHSJ(Source):
 
+    def download_data(self):
+        url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/hraniceUzemnichJednotek.zip'
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'hraniceUzemnichJednotek.zip')
+        if not os.path.exists(path):
+            urllib.request.urlretrieve(url, path)
+
     def get_vector(self, extent, EPSG):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'HraniceSpravniJednotkyaKU.shp')
-        # TODO read data from HTTP source join with geodata, etc.
+        self.download_data()
+        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'hraniceUzemnichJednotek.zip') + '/hraniceUzemnichJednotek/HraniceSpravniJednotkyaKU.shp'
         vector = QgsVectorLayer(path, "Hranice správní jednotky", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
         if not vector.isValid():
