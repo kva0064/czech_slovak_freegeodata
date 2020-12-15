@@ -1,6 +1,7 @@
 from .. source import Source
 import os
 from qgis.core import QgsVectorLayer, QgsMessageLog
+import urllib.request
 
 class CUZKHSJ(Source):
 
