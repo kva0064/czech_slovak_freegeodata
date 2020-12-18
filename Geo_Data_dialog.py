@@ -231,8 +231,10 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def add_proc_data_source_layer(self, data_source):
         if data_source['type'] == "PROC_VEC":
+            data_source['proc_class'].set_iface(self.iface)
             layer = data_source['proc_class'].get_vector(self.get_extent(), self.get_epsg())
         if data_source['type'] == "PROC_RAS":
+            data_source['proc_class'].set_iface(self.iface)
             layer = data_source['proc_class'].get_raster(self.get_extent(), self.get_epsg())
         if layer is not None:
             QgsProject.instance().addMapLayer(layer)

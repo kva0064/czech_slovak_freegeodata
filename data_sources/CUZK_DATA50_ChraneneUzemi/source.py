@@ -1,18 +1,13 @@
 from .. source import Source
 import os
 from qgis.core import QgsVectorLayer, QgsMessageLog
-import urllib.request
 
 class CUZKCHU(Source):
 
-    def download_data(self):
+    def get_vector(self, extent, EPSG):
         url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/hraniceUzemnichJednotek.zip'
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'hraniceUzemnichJednotek.zip')
-        if not os.path.exists(path):
-            urllib.request.urlretrieve(url, path)
-
-    def get_vector(self, extent, EPSG):
-        self.download_data()
+        self.download_data(url, path, "Chráněné území")
         path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'hraniceUzemnichJednotek.zip') + '/hraniceUzemnichJednotek/ChraneneUzemi.shp'
         vector = QgsVectorLayer(path, "Chráněné území", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')

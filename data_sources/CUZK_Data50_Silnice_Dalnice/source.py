@@ -1,4 +1,4 @@
-from data_sources.source import Source
+from .. source import Source
 import os
 from qgis.core import QgsVectorLayer, QgsMessageLog
 

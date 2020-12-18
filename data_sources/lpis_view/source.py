@@ -67,8 +67,6 @@ class Lpis(Source):
         # return "798428"
 
     def download_from_lpis(self, katuzid):
-        # TODO download from LPIS and unzip XML file
-        # http://eagri.cz/public/app/eagriapp/lpisdata/20200801-798428-DPB-XML-A.zip
         # TODO get current month
         last_date = "20200801"
         url = "http://eagri.cz/public/app/eagriapp/lpisdata/" + last_date + "-" + katuzid + "-DPB-XML-A.zip"
