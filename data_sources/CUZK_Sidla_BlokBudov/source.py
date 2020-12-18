@@ -6,9 +6,9 @@ class BlokBudov(Source):
 
     def get_vector(self, extent, EPSG):
         url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/vsechnyVrstvy.zip'
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip')
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'vsechnyVrstvy.zip')
         self.download_data(url, path, "ČUZK DATA 50")
-        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip') + '/shp/BlokBudov.shp'
+        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'vsechnyVrstvy.zip') + '/shp/BlokBudov.shp'
         vector = QgsVectorLayer(path, "ČÚZK DATA 50 - Bloky budov", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/styleBlokBudov.qml')
         if not vector.isValid():

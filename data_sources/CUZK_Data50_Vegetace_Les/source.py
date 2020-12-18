@@ -6,9 +6,9 @@ class Les(Source):
 
     def get_vector(self, extent, EPSG):
         url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/vsechnyVrstvy.zip'
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip')
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'vsechnyVrstvy.zip')
         self.download_data(url, path, "ČUZK DATA 50")
-        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip') + '/shp/Les.shp'
+        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'vsechnyVrstvy.zip') + '/shp/Les.shp'
         vector = QgsVectorLayer(path, "ČÚZK DATA 50 - Les", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
         if not vector.isValid():
