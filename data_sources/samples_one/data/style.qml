@@ -1,205 +1,199 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis hasScaleBasedVisibilityFlag="0" maxScale="0" simplifyDrawingHints="1" labelsEnabled="0" minScale="1e+8" version="3.4.11-Madeira" simplifyAlgorithm="0" simplifyDrawingTol="1" simplifyLocal="1" simplifyMaxScale="1" styleCategories="AllStyleCategories" readOnly="0">
-  <flags>
-    <Identifiable>1</Identifiable>
-    <Removable>1</Removable>
-    <Searchable>1</Searchable>
-  </flags>
-  <renderer-v2 attr="amount" graduatedMethod="GraduatedColor" enableorderby="0" forceraster="0" symbollevels="0" type="graduatedSymbol">
-    <ranges>
-      <range render="true" upper="90.000000000000000" symbol="0" label="0.0000 - 90.0000" lower="0.000000000000000"/>
-      <range render="true" upper="180.000000000000000" symbol="1" label="90.0000 - 180.0000" lower="90.000000000000000"/>
-      <range render="true" upper="270.000000000000000" symbol="2" label="180.0000 - 270.0000" lower="180.000000000000000"/>
-      <range render="true" upper="360.000000000000000" symbol="3" label="270.0000 - 360.0000" lower="270.000000000000000"/>
-      <range render="true" upper="450.000000000000000" symbol="4" label="360.0000 - 450.0000" lower="360.000000000000000"/>
-    </ranges>
+<qgis minScale="1e+8" readOnly="0" simplifyMaxScale="1" labelsEnabled="0" simplifyLocal="1" hasScaleBasedVisibilityFlag="0" version="3.2.2-Bonn" maxScale="0" simplifyAlgorithm="0" simplifyDrawingTol="1" simplifyDrawingHints="1">
+  <renderer-v2 attr="DATA50_P" forceraster="0" type="categorizedSymbol" symbollevels="0" enableorderby="0">
+    <categories>
+      <category value="vodní tok občasný povrchový" label="vodní tok občasný povrchový" symbol="0" render="true"/>
+      <category value="vodní tok stálý podzemní nebo ponorný" label="vodní tok stálý podzemní nebo ponorný" symbol="1" render="true"/>
+      <category value="vodní tok stálý povrchový do 5 m šířky" label="vodní tok stálý povrchový do 5 m šířky" symbol="2" render="true"/>
+      <category value="" label="" symbol="3" render="true"/>
+    </categories>
     <symbols>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="0" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="255,255,255,255" k="color"/>
-          <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
+      <symbol clip_to_extent="1" type="line" name="0" alpha="1">
+        <layer pass="0" class="SimpleLine" locked="0" enabled="1">
+          <prop v="round" k="capstyle"/>
+          <prop v="0.66;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
+          <prop v="round" k="joinstyle"/>
+          <prop v="72,123,182,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.66" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="1" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="1" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="255,191,191,255" k="color"/>
+      <symbol clip_to_extent="1" type="line" name="1" alpha="1">
+        <layer pass="0" class="SimpleLine" locked="0" enabled="1">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
           <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
+          <prop v="105,102,182,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.66" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="2" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="255,128,128,255" k="color"/>
+      <symbol clip_to_extent="1" type="line" name="2" alpha="1">
+        <layer pass="0" class="SimpleLine" locked="0" enabled="1">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
           <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
+          <prop v="46,169,240,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.66" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="3" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="255,64,64,255" k="color"/>
+      <symbol clip_to_extent="1" type="line" name="3" alpha="1">
+        <layer pass="0" class="SimpleLine" locked="0" enabled="1">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
           <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
+          <prop v="228,208,128,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.26" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
-            </Option>
-          </data_defined_properties>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="4" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="255,0,0,255" k="color"/>
-          <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
-          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
-          <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
-          <data_defined_properties>
-            <Option type="Map">
-              <Option value="" name="name" type="QString"/>
-              <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </symbols>
     <source-symbol>
-      <symbol alpha="1" clip_to_extent="1" force_rhr="0" name="0" type="fill">
-        <layer enabled="1" class="SimpleFill" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="213,180,60,255" k="color"/>
+      <symbol clip_to_extent="1" type="line" name="0" alpha="1">
+        <layer pass="0" class="SimpleLine" locked="0" enabled="1">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
           <prop v="bevel" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
+          <prop v="125,139,143,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.26" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
-          <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </source-symbol>
-    <colorramp name="[source]" type="gradient">
-      <prop v="255,255,255,255" k="color1"/>
-      <prop v="255,0,0,255" k="color2"/>
-      <prop v="0" k="discrete"/>
-      <prop v="gradient" k="rampType"/>
-    </colorramp>
-    <mode name="equal"/>
-    <symmetricMode enabled="false" astride="false" symmetryPoint="0"/>
+    <colorramp type="randomcolors" name="[source]"/>
     <rotation/>
     <sizescale/>
-    <labelformat decimalplaces="0" format="%1 - %2" trimtrailingzeroes="false"/>
   </renderer-v2>
   <customproperties>
     <property key="dualview/previewExpressions">
-      <value>"nid"</value>
+      <value>"JMENO"</value>
     </property>
-    <property key="embeddedWidgets/count" value="0"/>
+    <property value="0" key="embeddedWidgets/count"/>
     <property key="variableNames"/>
     <property key="variableValues"/>
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
-    <DiagramCategory backgroundAlpha="255" minimumSize="0" minScaleDenominator="0" labelPlacementMethod="XHeight" height="15" penWidth="0" penColor="#000000" enabled="0" opacity="1" diagramOrientation="Up" width="15" maxScaleDenominator="1e+8" barWidth="5" penAlpha="255" lineSizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" sizeScale="3x:0,0,0,0,0,0" rotationOffset="270" scaleBasedVisibility="0" sizeType="MM" backgroundColor="#ffffff" scaleDependency="Area">
-      <fontProperties description="Noto Sans,9,-1,5,50,0,0,0,0,0" style=""/>
+  <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
+    <DiagramCategory maxScaleDenominator="1e+8" minScaleDenominator="0" lineSizeScale="3x:0,0,0,0,0,0" enabled="0" minimumSize="0" backgroundColor="#ffffff" opacity="1" diagramOrientation="Up" width="15" sizeScale="3x:0,0,0,0,0,0" penColor="#000000" lineSizeType="MM" scaleBasedVisibility="0" labelPlacementMethod="XHeight" barWidth="5" rotationOffset="270" sizeType="MM" scaleDependency="Area" penWidth="0" backgroundAlpha="255" height="15" penAlpha="255">
+      <fontProperties description="MS Shell Dlg 2,7.8,-1,5,50,0,0,0,0,0" style=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings dist="0" zIndex="0" obstacle="0" placement="1" showAll="1" priority="0" linePlacementFlags="18">
+  <DiagramLayerSettings dist="0" zIndex="0" placement="2" showAll="1" priority="0" obstacle="0" linePlacementFlags="18">
     <properties>
       <Option type="Map">
-        <Option value="" name="name" type="QString"/>
+        <Option value="" type="QString" name="name"/>
         <Option name="properties"/>
-        <Option value="collection" name="type" type="QString"/>
+        <Option value="collection" type="QString" name="type"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
-  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
-    <activeChecks/>
-    <checkConfiguration/>
-  </geometryOptions>
   <fieldConfiguration>
-    <field name="namwri">
+    <field name="JMENO">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="amount">
-      <editWidget type="Range">
+    <field name="SHAPE_Leng">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field name="DATA50_K">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field name="DATA50_P">
+      <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
@@ -207,38 +201,43 @@
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias index="0" name="" field="namwri"/>
-    <alias index="1" name="" field="amount"/>
+    <alias index="0" name="" field="JMENO"/>
+    <alias index="1" name="" field="SHAPE_Leng"/>
+    <alias index="2" name="" field="DATA50_K"/>
+    <alias index="3" name="" field="DATA50_P"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default expression="" applyOnUpdate="0" field="namwri"/>
-    <default expression="" applyOnUpdate="0" field="amount"/>
+    <default applyOnUpdate="0" expression="" field="JMENO"/>
+    <default applyOnUpdate="0" expression="" field="SHAPE_Leng"/>
+    <default applyOnUpdate="0" expression="" field="DATA50_K"/>
+    <default applyOnUpdate="0" expression="" field="DATA50_P"/>
   </defaults>
   <constraints>
-    <constraint unique_strength="0" notnull_strength="0" constraints="0" field="namwri" exp_strength="0"/>
-    <constraint unique_strength="0" notnull_strength="0" constraints="0" field="amount" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="0" exp_strength="0" field="JMENO" constraints="0"/>
+    <constraint unique_strength="0" notnull_strength="0" exp_strength="0" field="SHAPE_Leng" constraints="0"/>
+    <constraint unique_strength="0" notnull_strength="0" exp_strength="0" field="DATA50_K" constraints="0"/>
+    <constraint unique_strength="0" notnull_strength="0" exp_strength="0" field="DATA50_P" constraints="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint desc="" exp="" field="namwri"/>
-    <constraint desc="" exp="" field="amount"/>
+    <constraint desc="" field="JMENO" exp=""/>
+    <constraint desc="" field="SHAPE_Leng" exp=""/>
+    <constraint desc="" field="DATA50_K" exp=""/>
+    <constraint desc="" field="DATA50_P" exp=""/>
   </constraintExpressions>
-  <expressionfields/>
   <attributeactions>
-    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
+    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
   </attributeactions>
-  <attributetableconfig actionWidgetStyle="dropDown" sortOrder="0" sortExpression="">
+  <attributetableconfig sortExpression="&quot;DATA50_P&quot;" actionWidgetStyle="dropDown" sortOrder="1">
     <columns>
-      <column width="-1" hidden="0" name="namwri" type="field"/>
-      <column width="-1" hidden="1" type="actions"/>
-      <column width="-1" hidden="0" name="amount" type="field"/>
+      <column hidden="0" width="-1" type="field" name="JMENO"/>
+      <column hidden="0" width="-1" type="field" name="SHAPE_Leng"/>
+      <column hidden="0" width="-1" type="field" name="DATA50_K"/>
+      <column hidden="0" width="-1" type="field" name="DATA50_P"/>
+      <column hidden="1" width="-1" type="actions"/>
     </columns>
   </attributetableconfig>
-  <conditionalstyles>
-    <rowstyles/>
-    <fieldstyles/>
-  </conditionalstyles>
   <editform tolerant="1"></editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>
@@ -263,15 +262,24 @@ def my_form_open(dialog, layer, feature):
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field name="amount" editable="1"/>
-    <field name="namwri" editable="1"/>
+    <field editable="1" name="DATA50_K"/>
+    <field editable="1" name="DATA50_P"/>
+    <field editable="1" name="JMENO"/>
+    <field editable="1" name="SHAPE_Leng"/>
   </editable>
   <labelOnTop>
-    <field labelOnTop="0" name="amount"/>
-    <field labelOnTop="0" name="namwri"/>
+    <field labelOnTop="0" name="DATA50_K"/>
+    <field labelOnTop="0" name="DATA50_P"/>
+    <field labelOnTop="0" name="JMENO"/>
+    <field labelOnTop="0" name="SHAPE_Leng"/>
   </labelOnTop>
   <widgets/>
-  <previewExpression>"nid"</previewExpression>
+  <conditionalstyles>
+    <rowstyles/>
+    <fieldstyles/>
+  </conditionalstyles>
+  <expressionfields/>
+  <previewExpression>JMENO</previewExpression>
   <mapTip></mapTip>
-  <layerGeometryType>2</layerGeometryType>
+  <layerGeometryType>1</layerGeometryType>
 </qgis>
