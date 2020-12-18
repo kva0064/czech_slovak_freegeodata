@@ -32,6 +32,7 @@ from qgis.PyQt import QtWidgets
 from qgis.PyQt import QtGui
 from qgis.utils import iface
 from qgis.core import *
+from qgis.gui import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
@@ -54,14 +55,25 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButtonAbout.clicked.connect(self.showAbout)
         self.pushButtonLoadRuianPlugin.clicked.connect(self.load_ruian_plugin)
         self.pushButtonLoadData.clicked.connect(self.load_data)
+        self.pushButtonSourceOptions.clicked.connect(self.show_source_options_dialog)
         self.data_sources = []
-        self.other_data_sources = []
+        self.treeWidgetSources.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.treeWidgetSources.customContextMenuRequested.connect(self.open_context_menu)
         self.load_sources_into_tree()
+        self.selectedSource = -1
 
     def get_url(self, config):
         if config['general']['type'] == 'WMS':
             # TODO check CRS? Maybe.
-            return 'url=' + config['wms']['url'] + "&layers=" + config['wms']['layers'] + "&styles=" + config['wms']['styles'] + "&" + config['wms']['params']
+            url = 'url=' + config['wms']['url']
+            layers = config['wms']['layers'].split(',')
+            for layer in layers:
+                url += "&layers=" + layer
+            styles = config['wms']['styles'].split(',')
+            for style in styles:
+                url += "&styles=" + style
+            url += "&" + config['wms']['params']
+            return url
 
         if config['general']['type'] == 'TMS':
             return "type=xyz&url=" + config['tms']['url']
@@ -81,6 +93,7 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
     def load_sources_into_tree(self):
 
         self.treeWidgetSources.itemChanged.connect(self.handleChanged)
+        self.treeWidgetSources.itemSelectionChanged.connect(self.handleSelected)
         tree    = self.treeWidgetSources
         paths = []
 
@@ -136,6 +149,19 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 child.setCheckState(0, Qt.Unchecked)
             index += 1
 
+    def handleSelected(self):
+        self.selectedSource = -1
+        self.pushButtonSourceOptions.setEnabled(False)
+        print(self.treeWidgetSources.selectedItems())
+        for item in self.treeWidgetSources.selectedItems():
+            if item.data(0, Qt.UserRole) is not None:
+                id = int(item.data(0, Qt.UserRole))
+                print(str(id))
+                if self.data_sources[id]['proc_class'].has_options_dialog():
+                    self.selectedSource = id
+                    self.pushButtonSourceOptions.setEnabled(True)
+                    print("HAS OPTIONS DIALOG")
+
     def handleChanged(self, item, column):
         # Get his status when the check status changes.
         if item.data(0, Qt.UserRole) is not None:
@@ -148,9 +174,19 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
                 self.data_sources[id]['checked'] = "False"
             # print(item.data(0, Qt.UserRole))
 
+    def open_context_menu(self):
+        # TODO - if we want context menu
+        # https://wiki.python.org/moin/PyQt/Creating%20a%20context%20menu%20for%20a%20tree%20view
+        print("MENU")
+
+    def show_source_options_dialog(self):
+        if self.selectedSource >= 0:
+            self.data_sources[self.selectedSource]['proc_class'].show_options_dialog()
+
     def add_layer(self, data_source):
         # print("Add Layer " + (self.wms_sources[index]))
         # rlayer = QgsRasterLayer(self.wms_sources[index], 'MA-ALUS', 'wms')
+        print(data_source['url'])
         layer = QgsRasterLayer(data_source['url'], data_source['alias'], 'wms')
         # TODO check if the layer is valid
         QgsProject.instance().addMapLayer(layer)
@@ -195,8 +231,10 @@ class GeoDataDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def add_proc_data_source_layer(self, data_source):
         if data_source['type'] == "PROC_VEC":
+            data_source['proc_class'].set_iface(self.iface)
             layer = data_source['proc_class'].get_vector(self.get_extent(), self.get_epsg())
         if data_source['type'] == "PROC_RAS":
+            data_source['proc_class'].set_iface(self.iface)
             layer = data_source['proc_class'].get_raster(self.get_extent(), self.get_epsg())
         if layer is not None:
             QgsProject.instance().addMapLayer(layer)

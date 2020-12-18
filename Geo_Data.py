@@ -23,7 +23,8 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QToolButton, QMenu,QMessageBox, QDialog
+from qgis.PyQt.QtWidgets import QAction, QToolButton, QMenu, QMessageBox, QDialog
+from qgis.PyQt.QtWidgets import QAction, QToolButton, QMenu, QMessageBox, QDialog
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -160,7 +161,8 @@ class GeoData:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
         
-        icon_path = ':/plugins/Geo_Data/icon.png'
+        icon_path = os.path.join(
+            os.path.dirname(__file__), 'icon.png')
         self.add_action(
             icon_path,
             text=self.tr(u'Browse data sources'),
