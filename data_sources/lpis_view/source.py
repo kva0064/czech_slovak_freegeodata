@@ -14,6 +14,8 @@ from qgis.PyQt.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 
+from datetime import date, timedelta
+
 class Lpis(Source):
 
     def get_vector(self, extent, EPSG):
@@ -24,6 +26,9 @@ class Lpis(Source):
             return None
         else:
             vector = self.create_vector(path, katuzid)
+            crs = vector.crs()
+            crs.createFromId(5514)
+            vector.setCrs(crs)
             vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
             if not vector.isValid():
                 QgsMessageLog.logMessage("Layer " + path + " was not loaded", "GeoData")
@@ -62,35 +67,27 @@ class Lpis(Source):
                 if distance < mindistance:
                     mindistance = distance
                     katuzid = row[0]
-        print(katuzid)
+        # print(katuzid)
         return katuzid
         # return "798428"
 
-    def download_from_lpis(self, katuzid):
-        # TODO get current month
-        last_date = "20200801"
-        url = "http://eagri.cz/public/app/eagriapp/lpisdata/" + last_date + "-" + katuzid + "-DPB-XML-A.zip"
-        http = urllib3.PoolManager()
-        response = http.request('GET', url, preload_content=False)
-        content_length = response.headers['Content-Length']
-        total_size = int(content_length) # TODO maybe return progress later
-        downloaded = 0
-        CHUNK = 256 * 10240
-        zip_temp = tempfile.NamedTemporaryFile(mode='w+b', suffix='.zip', delete=False)
-        zip_temp_n = zip_temp.name
-        zip_temp.seek(0)
+    def get_previous_month(self):
+        last_day_of_prev_month = date.today().replace(day=1) - timedelta(days=1)
+        start_day_of_prev_month = date.today().replace(day=1) - timedelta(days=last_day_of_prev_month.day)
+        # For printing results
+        # print("First day of prev month:", start_day_of_prev_month)
+        # print("Last day of prev month:", last_day_of_prev_month)
+        return str(start_day_of_prev_month).replace("-", "")
 
-        with open(zip_temp_n, 'wb') as fp:
-            while True:
-                chunk = response.read(CHUNK)
-                downloaded += len(chunk)
-                if not chunk:
-                    break
-                fp.write(chunk)
-        response.release_conn()
+    def download_from_lpis(self, katuzid):
+        last_date = "20200801"
+        # last_date = self.get_previous_month()
+        url = "http://eagri.cz/public/app/eagriapp/lpisdata/" + last_date + "-" + katuzid + "-DPB-XML-A.zip"
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', last_date + "-" + katuzid + "-DPB-XML-A.zip")
+        self.download_data(url, path, "LPIS KATUZID " + katuzid)
 
         try:
-            lpis_zip = ZipFile(zip_temp)
+            lpis_zip = ZipFile(path)
             current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
             lpis_zip.extractall(os.path.join(current_dir, 'data'))
         except:
@@ -98,11 +95,9 @@ class Lpis(Source):
                                     QApplication.translate("GeoData", "Can not read data from LPIS database.", None))
             return
 
-        zip_temp.close()
-
         current_file = None
         for name in os.listdir(os.path.join(current_dir, 'data')):
-            if katuzid in name:
+            if katuzid in name and not "zip" in name:
                 current_file = os.path.join(current_dir, 'data', name)
         return current_file
 

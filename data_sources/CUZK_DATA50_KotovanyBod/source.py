@@ -5,9 +5,11 @@ from qgis.core import QgsVectorLayer, QgsMessageLog
 class CUZKCHU(Source):
 
     def get_vector(self, extent, EPSG):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'KotovanyBod.shp')
-        # TODO read data from HTTP source join with geodata, etc.
-        vector = QgsVectorLayer(path, "Kótovany Bod", "ogr")
+        url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/vsechnyVrstvy.zip'
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip')
+        self.download_data(url, path, "ČUZK DATA 50")
+        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip') + '/shp/KotovanyBod.shp'
+        vector = QgsVectorLayer(path, "ČÚZK DATA 50 - Kótovany Bod", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/style.qml')
         if not vector.isValid():
             QgsMessageLog.logMessage("Vrstvu " + path + " se nepodařilo načíst", "GeoData")

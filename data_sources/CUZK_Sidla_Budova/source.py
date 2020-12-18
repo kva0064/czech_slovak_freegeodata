@@ -3,10 +3,13 @@ import os
 from qgis.core import QgsVectorLayer, QgsMessageLog
 
 class Budova(Source):
+
     def get_vector(self, extent, EPSG):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'Budova.shp')
-        # TODO read data from HTTP source join with geodata, etc.
-        vector = QgsVectorLayer(path, "Budova", "ogr")
+        url = 'http://geoportal.cuzk.cz/ZAKAZKY/Data50/vsechnyVrstvy.zip'
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip')
+        self.download_data(url, path, "ČUZK DATA 50")
+        path = '/vsizip/' + os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vsechnyVrstvy.zip') + '/shp/Budova.shp'
+        vector = QgsVectorLayer(path, "ČÚZK DATA 50 - Budovy", "ogr")
         vector.loadNamedStyle(os.path.dirname(__file__) + '/data/styleBudova.qml')
         if not vector.isValid():
             QgsMessageLog.logMessage("Vrstvu " + path + " se nepodařilo načíst", "GeoData")
