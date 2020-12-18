@@ -102,7 +102,7 @@ The plugin allows also to open RUIAN plugin dialog for import data from RUIAN se
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>360</y>
+     <y>380</y>
      <width>171</width>
      <height>61</height>
     </rect>
@@ -112,6 +112,25 @@ The plugin allows also to open RUIAN plugin dialog for import data from RUIAN se
    </property>
    <property name="wordWrap">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonSourceOptions">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>340</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
+   </property>
+   <property name="text">
+    <string>Source Options</string>
    </property>
   </widget>
  </widget>
